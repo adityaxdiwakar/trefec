@@ -23,8 +23,12 @@ def handler(card):
         card.destory()
         return
 
+    if quantity > len(list_items):
+        quantity = len(list_items) - 1
+
     c_start = whi - (quantity)
     c_end = whi
+    print(c_start, c_end)
     cards_ir = list_items[c_start:c_end]
 
     if command == "delete":
@@ -65,16 +69,18 @@ def label(cards, card):
                 "token": os.getenv("API_TOKEN")                
             }
         )
-        cur_labels = ','.join(v.json()["idLabels"])
-        print(cur_labels)
+        arr_labels = v.json()["idLabels"]
+        arr_labels.append(labels[0]["id"])
+        n_labels = ','.join(arr_labels)
         s = requests.put(
             f"https://api.trello.com/1/cards/{c_id}",
             params = {
-                "idLabels": labels[0]["id"],
+                "idLabels": n_labels,
                 "key": os.getenv("API_KEY"),
                 "token": os.getenv("API_TOKEN")
             }
         )
+        print(s.text)
     
 
 def delete(cards):
