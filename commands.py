@@ -13,19 +13,14 @@ def handler(card):
     command = card.params[0]
     quantity = int(card.params[1].strip().split(" ")[1])
     
-    whi = 0 #the location of the the current card in the list
-    for x in range(len(list_items)):
-        if card.c_id == list_items[x]["id"]:
-            whi = x
-            break
+    if not quantity:
+        return card.destory()
 
-    if quantity == 0:
-        card.destory()
-        return
+    whi = list_items.index(
+        [x for x in list_items if x["id"] == card.c_id][0]
+    )
 
-    if quantity > len(list_items):
-        quantity = len(list_items) - 1
-
+    quantity = min(quantity, len(list_items) - 1)
     cards_ir = list_items[whi-quantity:whi]
 
     if command == "delete":
