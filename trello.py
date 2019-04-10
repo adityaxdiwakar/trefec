@@ -21,8 +21,10 @@ class Card():
         self.c_id = None
         self.l_name = None
         self.l_id = None
+        self.c_author = None
         self.params = []
         if self.action_type == "createCard":
+            self.c_author = t_object["action"]["memberCreator"]
             self.c_name = t_object["action"]["data"]["card"]["name"]
             self.c_id = t_object["action"]["data"]["card"]["id"]
             self.l_name = t_object["action"]["data"]["list"]["name"]

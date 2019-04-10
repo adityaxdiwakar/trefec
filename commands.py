@@ -37,8 +37,8 @@ def handler(card):
         label(cards_ir, card)
     #if command == "due":
     #    due(cards_ir, card)
-    #if command == "me":
-    #    me(cards_ir)
+    if command == "me":
+        me(cards_ir, card.c_author["id"])
 
     card.destory()
 
@@ -80,7 +80,6 @@ def label(cards, card):
                 "token": os.getenv("API_TOKEN")
             }
         )
-        print(s.text)
     
 
 def delete(cards):
@@ -89,6 +88,30 @@ def delete(cards):
         s = requests.delete(
             f"https://api.trello.com/1/cards/{c_id}",
             params = {
+                "key": os.getenv("API_KEY"),
+                "token": os.getenv("API_TOKEN")
+            }
+        )
+
+
+def me(cards, me):
+    for card in cards:
+        c_id = card["id"]
+        v = requests.get(
+            f"https://api.trello.com/1/cards/{c_id}",
+            params = {
+                "fields": "idMembers",
+                "key": os.getenv("API_KEY"),
+                "token": os.getenv("API_TOKEN")                
+            }
+        )
+        members = v.json()["idMembers"]
+        members.append(me)
+        n_members = ','.join(members)
+        s = requests.put(
+            f"https://api.trello.com/1/cards/{c_id}",
+            params = {
+                "idMembers": n_members,
                 "key": os.getenv("API_KEY"),
                 "token": os.getenv("API_TOKEN")
             }
