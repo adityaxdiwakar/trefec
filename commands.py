@@ -26,27 +26,43 @@ def handler(card):
     if quantity > len(list_items):
         quantity = len(list_items) - 1
 
-    c_start = whi - (quantity)
-    c_end = whi
-    cards_ir = list_items[c_start:c_end]
+    cards_ir = list_items[whi-quantity:whi]
 
     if command == "delete":
         delete(cards_ir)
     if command == "label":
         label(cards_ir, card)
-    #if command == "due":
-    #    due(cards_ir, card)
     if command == "me":
         me(cards_ir, card.c_author["id"])
 
     card.destory()
 
 def label(cards, card):
+    fields = ["name", "desc", "descData", "closed", "idOrganization",
+              "pinned", "url", "shortUrl", "prefs", "labelNames"]
     all_labels = requests.get(
-        f"https://api.trello.com/1/boards/{card.b_id}?actions=none&boardStars=none&cards=none&card_pluginData=false&checklists=none&customFields=false&fields=name%2Cdesc%2CdescData%2Cclosed%2CidOrganization%2Cpinned%2Curl%2CshortUrl%2Cprefs%2ClabelNames&labels=all&lists=none&members=none&memberships=none&membersInvited=none&membersInvited_fields=none&pluginData=false&organization=false&organization_pluginData=false&myPrefs=false&tags=false",
+        f"https://api.trello.com/1/boards/{card.b_id}",
         params = {
             "key": os.getenv("API_KEY"),
-            "token": os.getenv("API_TOKEN")
+            "token": os.getenv("API_TOKEN"),
+            "actions": "none",
+            "boardStars": "none",
+            "cards": "none",
+            "card_pluginData": "false",
+            "checklists": "none",
+            "customFields": "false",
+            "fields": "%2C".join(fields),
+            "tags": "false",
+            "labels": "all",
+            "lists": "none",
+            "members": "none",
+            "memberships": "none",
+            "membersInvisted": "none",
+            "membersInvited_fields": "none",
+            "pluginData": "false",
+            "organization": "false",
+            "organizaton_pluginData": "false",
+            "myPrefs": "false"
         }
     ).json()["labels"]
     labels = []
