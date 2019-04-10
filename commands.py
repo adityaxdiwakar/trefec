@@ -28,7 +28,6 @@ def handler(card):
 
     c_start = whi - (quantity)
     c_end = whi
-    print(c_start, c_end)
     cards_ir = list_items[c_start:c_end]
 
     if command == "delete":
